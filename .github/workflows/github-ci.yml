@@ -1,0 +1,41 @@
+name: github-ci
+defaults:
+  run:
+    shell: bash
+    working-directory: ./scripts
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+      - name: Run linting script
+        run: ./lint.sh
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+      - name: Run build script
+        run: ./build.sh
+  upload:
+    runs-on: ubuntu-latest
+    needs: [lint, build]
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+      - name: Run upload script
+        run: ./upload.sh
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [lint, build, upload]
+    steps:
+      - name: Checkout repo code
+        uses: actions/checkout@v4
+      - name: Run deploy script
+        run: ./deploy.sh
