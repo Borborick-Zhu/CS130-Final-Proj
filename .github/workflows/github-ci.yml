@@ -10,7 +10,7 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repo code
         uses: actions/checkout@v4
@@ -22,8 +22,16 @@ jobs:
     steps:
       - name: Checkout repo code
         uses: actions/checkout@v4
-      - name: Run build script
-        run: ./build.sh
+      - name: Deploy to GCE VM
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          script: |
+            echo "successfully sshed into VM!"
+            whoami
+
   upload:
     runs-on: ubuntu-latest
     needs: [lint, build]
