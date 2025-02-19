@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "lint stage complete!"
+echo "linting within ${IP}"

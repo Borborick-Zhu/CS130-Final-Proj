@@ -15,6 +15,9 @@ jobs:
       - name: Checkout repo code
         uses: actions/checkout@v4
       - name: Run linting script
+        shell: bash
+        env:
+          IP: ${{ secrets.GCP_VM_IP }}
         run: ./lint.sh
   build:
     runs-on: ubuntu-latest
@@ -29,7 +32,6 @@ jobs:
           username: ${{ secrets.GCP_VM_USER }}
           key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
           script: |
-            echo "successfully sshed into VM!"
             whoami
 
   upload:
