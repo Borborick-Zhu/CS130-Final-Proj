@@ -25,4 +25,4 @@ QuickThink is easily accessible via our website:
     - The frontend React app uses these endpoints to fetch, display, update, and delete flashcard data.
     - Additional endpoints support authentication and user management.
   
-Penis
+WEEEEE!
