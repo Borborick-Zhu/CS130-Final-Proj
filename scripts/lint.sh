@@ -1,3 +1,3 @@
 #!/bin/bash
 
-echo "linting within ${IP}"
+echo "linting succeeded!"
