@@ -8,24 +8,12 @@ on:
     branches:
       - 'main'
 jobs:
-  lint:
+  pipeline:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo code
         uses: actions/checkout@v4
-      - name: Run linting script
-        shell: bash
-        env:
-          IP: ${{ secrets.GCP_VM_IP }}
-        run: ./lint.sh
-  build_and_deploy:
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repo code
-        uses: actions/checkout@v4
-      - name: Build and Deploy App Changes
+      - name: Lint, Build, and Deploy App Changes
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.GCP_VM_IP }}
@@ -38,4 +26,4 @@ jobs:
             npm install
             npm run build
             pkill "next-server"
-            npm run start_prd
+            npm run start_prd &
