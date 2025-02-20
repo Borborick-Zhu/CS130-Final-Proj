@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.GCP_VM_USER }}
           password: ${{ secrets.GCP_SSH_PASSWORD }}
           script: |
-            whoami
+            cat /etc/os-release
 
   upload:
     runs-on: ubuntu-latest
