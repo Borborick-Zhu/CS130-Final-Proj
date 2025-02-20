@@ -7,13 +7,13 @@ on:
   push:
     branches:
       - 'main'
-jobs:
-  pipeline:
+jobs: 
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo code
         uses: actions/checkout@v4
-      - name: Lint, Build, and Deploy App Changes
+      - name: Build and Deploy App Changes
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.GCP_VM_IP }}
@@ -25,5 +25,5 @@ jobs:
             cd frontend
             npm install
             npm run build
-            pkill "next-server"
-            npm run start_prd &
+            pkill -9 "next-server"
+            pm2 restart "npm run start_prd"
