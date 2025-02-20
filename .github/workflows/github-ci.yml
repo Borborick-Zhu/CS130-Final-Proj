@@ -30,7 +30,7 @@ jobs:
         with:
           host: ${{ secrets.GCP_VM_IP }}
           username: ${{ secrets.GCP_VM_USER }}
-          key: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+          password: ${{ secrets.GCP_SSH_PASSWORD }}
           script: |
             whoami
 
