@@ -1,11 +1,18 @@
-import "@mantine/core/styles.css";
-import React from "react";
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+import './theme/styles.css';
+import './theme/fonts.css';import React from "react";
+
 import {
   MantineProvider,
   ColorSchemeScript,
   mantineHtmlProps,
 } from "@mantine/core";
 import { theme } from "../theme";
+import { Notifications } from '@mantine/notifications';
+
+import { shadcnCssVariableResolver } from './theme/cssVariableResolver';
+import { shadcnTheme } from './theme/theme';
 
 export const metadata = {
   title: "Mantine Next.js template",
@@ -16,7 +23,8 @@ export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript />
+        {/* dark mode: */}
+        <ColorSchemeScript defaultColorScheme="dark" />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta
           name="viewport"
@@ -24,7 +32,14 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+      <MantineProvider
+        // dark mode:
+        theme={shadcnTheme} 
+        defaultColorScheme="dark"
+        cssVariablesResolver={shadcnCssVariableResolver}>
+        <Notifications />
+            {children}
+      </MantineProvider>
       </body>
     </html>
   );
