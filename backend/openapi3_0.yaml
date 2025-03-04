@@ -1,0 +1,480 @@
+
+"openapi": "3.0.3"
+"info":
+  "title": "QuickThink API - 1.0"
+  "description": "This is a description of the endpoints for the API provided by our application QuickThink - written in Python using FastAPI"
+  "termsOfService": "http://swagger.io/terms/"
+  "version": "1.0.0"
+"servers":
+  -
+    "url": "/api"
+"tags":
+  -
+    "name": "Deck Management"
+    "description": "Deck-related operations"
+  -
+    "name": "Flashcard Management"
+    "description": "Flashcard-related operations"
+"paths":
+  "/decks":
+    "get":
+      "tags":
+        - "Deck Management"
+      "summary": "Get all decks for current User"
+      "description": "Retrieves all decks linked to the current User"
+      "operationId": "getDecks"
+      "responses":
+        "200":
+          "description": "Successfully got all decks"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "id":
+                      "type": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "user_id":
+                      "type": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "name":
+                      "type": "string"
+                      "example": "QuickThinker"
+                    "category":
+                      "type": "string"
+                      "example": "US History"
+                    "description":
+                      "type": "string"
+                      "example": "A flashcard deck about US history"
+                    "created-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+                    "updated-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+        "400":
+          "description": "No deck found"
+    "post":
+      "tags":
+        - "Deck Management"
+      "summary": "Create a new deck for the current user"
+      "description": "Adds a new deck linked to the current user"
+      "operationId": "postDeck"
+      "requestBody":
+        "description": "Create a new deck in the database"
+        "content":
+          "application/json":
+            "schema":
+              "type": "object"
+              "properties":
+                "name":
+                  "type": "string"
+                "category":
+                  "type": "string"
+                "description":
+                  "type": "string"
+        "required": true
+      "responses":
+        "200":
+          "description": "Successfully created deck"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "user_id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "name":
+                    "type": "string"
+                    "example": "QuickThinker"
+                  "category":
+                    "type": "string"
+                    "example": "US History"
+                  "description":
+                    "type": "string"
+                    "example": "A flashcard deck about US history"
+                  "created-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+                  "updated-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+        "400":
+          "description": "Failed to create deck"
+  "/decks/deck_id":
+    "delete":
+      "tags":
+        - "Deck Management"
+      "summary": "Deletes deck by ID"
+      "description": "Removes a deck from the database with the given deck_id"
+      "operationId": "deleteDeckByID"
+      "parameters":
+        -
+          "name": "deck_id"
+          "in": "query"
+          "description": "The ID of the deck that is to-be-deleted"
+          "required": true
+          "schema":
+            "type": "string"
+      "responses":
+        "200":
+          "description": "Successfully deleted deck"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "user_id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "name":
+                    "type": "string"
+                    "example": "QuickThinker"
+                  "category":
+                    "type": "string"
+                    "example": "US History"
+                  "description":
+                    "type": "string"
+                    "example": "A flashcard deck about US history"
+                  "created-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+                  "updated-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+        "404":
+          "description": "Deck not found or not owned by user"
+    "patch":
+      "tags":
+        - "Deck Management"
+      "summary": "Updates a deck by ID"
+      "description": "Updates a deck from the database with the given ID"
+      "operationId": "patchDeckByID"
+      "parameters":
+        -
+          "name": "deck_id"
+          "in": "query"
+          "description": "ID of the deck that is to-be-updated"
+          "required": true
+          "schema":
+            "type": "string"
+      "requestBody":
+        "description": "Update deck metadata"
+        "content":
+          "application/json":
+            "schema":
+              "type": "object"
+              "properties":
+                "name":
+                  "type": "string"
+                "category":
+                  "type": "string"
+                "description":
+                  "type": "string"
+      "responses":
+        "200":
+          "description": "Sucessfully updated deck"
+          "content":
+            "application/json":
+              "schema":
+                "type": "object"
+                "properties":
+                  "id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "user_id":
+                    "type": "string"
+                    "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                  "name":
+                    "type": "string"
+                    "example": "QuickThinker"
+                  "category":
+                    "type": "string"
+                    "example": "US History"
+                  "description":
+                    "type": "string"
+                    "example": "A flashcard deck about US history"
+                  "created-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+                  "updated-at":
+                    "type": "string"
+                    "format": "date-time"
+                    "example": "2025-03-04T17:06:10Z"
+        "404":
+          "description": "Deck not found or not owned by user"
+  "/decks/deck_id/flashcards":
+    "get":
+      "tags":
+        - "Flashcard Management"
+      "summary": "Gets all flashcards for the given deck_id"
+      "description": "Retrieves all flashcards for a given deck_id"
+      "operationId": "getFlashcardsByDeckID"
+      "parameters":
+        -
+          "name": "deck_id"
+          "in": "query"
+          "description": "ID of the deck that is to-be-queried"
+          "required": true
+          "schema":
+            "type": "string"
+      "responses":
+        "200":
+          "description": "Successfully retrieved all flashcards"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "deck_id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "question":
+                      "type": "string"
+                      "format": "string"
+                      "example": "How many states does the USA have?"
+                    "answer":
+                      "type": "string"
+                      "format": "string"
+                      "example": "50"
+                    "created-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+                    "updated-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+        "404":
+          "description": "Deck not found or not owned by user"
+    "post":
+      "tags":
+        - "Flashcard Management"
+      "summary": "Adds flashcards to the given deck"
+      "description": "Adds flashcards to the given deck identified by deck_id"
+      "operationId": "PostFlashcardsByDeckID"
+      "parameters":
+        -
+          "name": "deck_id"
+          "in": "query"
+          "description": "ID of the deck that is to receive new flashcards"
+          "required": true
+          "schema":
+            "type": "string"
+      "requestBody":
+        "description": "Flashcard content to-be added to the deck"
+        "content":
+          "application/json":
+            "schema":
+              "type": "array"
+              "items":
+                "type": "object"
+                "properties":
+                  "question":
+                    "type": "string"
+                    "example": "How many states are in the US?"
+                  "answer":
+                    "type": "string"
+                    "example": "50"
+      "responses":
+        "200":
+          "description": "Successfully added flashcards to deck"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "deck_id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "question":
+                      "type": "string"
+                      "format": "string"
+                      "example": "How many states does the USA have?"
+                    "answer":
+                      "type": "string"
+                      "format": "string"
+                      "example": "50"
+                    "created-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+                    "updated-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+        "404":
+          "description": "Deck not found or not owned by user"
+        "400":
+          "description": "Failed to create flashcards"
+  "/decks/deck_id/flashcards/file":
+    "post":
+      "tags":
+        - "Flashcard Management"
+      "summary": "Generates flashcards using AI"
+      "description": "Creates flashcards out of uploaded PDF file"
+      "operationId": "PostFile"
+      "parameters":
+        -
+          "name": "deck_id"
+          "in": "query"
+          "description": "ID of the deck that is to receive new flashcards"
+          "required": true
+          "schema":
+            "type": "string"
+      "requestBody":
+        "description": "File to-be-uploaded"
+        "content":
+          "application/pdf":
+            "schema":
+              "type": "object"
+      "responses":
+        "200":
+          "description": "Successfully generated flashcards and added to deck"
+          "content":
+            "application/json":
+              "schema":
+                "type": "array"
+                "items":
+                  "type": "object"
+                  "properties":
+                    "id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "deck_id":
+                      "type": "string"
+                      "format": "string"
+                      "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+                    "question":
+                      "type": "string"
+                      "format": "string"
+                      "example": "How many states does the USA have?"
+                    "answer":
+                      "type": "string"
+                      "format": "string"
+                      "example": "50"
+                    "created-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+                    "updated-at":
+                      "type": "string"
+                      "format": "date-time"
+                      "example": "2025-03-04T17:06:10Z"
+        "404":
+          "description": "Deck not found or not owned by user"
+        "400":
+          "description": "Failed to create flashcards"
+"components":
+  "schemas":
+    "DeckCreate":
+      "type": "object"
+      "properties":
+        "name":
+          "type": "string"
+        "category":
+          "type": "string"
+        "description":
+          "type": "string"
+    "DeckUpdate":
+      "type": "object"
+      "properties":
+        "name":
+          "type": "string"
+        "category":
+          "type": "string"
+        "description":
+          "type": "string"
+    "DeckOut":
+      "type": "object"
+      "properties":
+        "id":
+          "type": "string"
+          "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+        "user_id":
+          "type": "string"
+          "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+        "name":
+          "type": "string"
+          "example": "QuickThinker"
+        "category":
+          "type": "string"
+          "example": "US History"
+        "description":
+          "type": "string"
+          "example": "A flashcard deck about US history"
+        "created-at":
+          "type": "string"
+          "format": "date-time"
+          "example": "2025-03-04T17:06:10Z"
+        "updated-at":
+          "type": "string"
+          "format": "date-time"
+          "example": "2025-03-04T17:06:10Z"
+    "FlashcardCreate":
+      "type": "object"
+      "properties":
+        "question":
+          "type": "string"
+          "example": "How many states are in the US?"
+        "answer":
+          "type": "string"
+          "example": "50"
+    "FlashcardOut":
+      "type": "object"
+      "properties":
+        "id":
+          "type": "string"
+          "format": "string"
+          "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+        "deck_id":
+          "type": "string"
+          "format": "string"
+          "example": "e13a4297-16ae-4342-8fbf-f45587048596"
+        "question":
+          "type": "string"
+          "format": "string"
+          "example": "How many states does the USA have?"
+        "answer":
+          "type": "string"
+          "format": "string"
+          "example": "50"
+        "created-at":
+          "type": "string"
+          "format": "date-time"
+          "example": "2025-03-04T17:06:10Z"
+        "updated-at":
+          "type": "string"
+          "format": "date-time"
+          "example": "2025-03-04T17:06:10Z"
