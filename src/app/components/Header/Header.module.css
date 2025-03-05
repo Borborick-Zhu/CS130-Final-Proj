@@ -5,7 +5,12 @@
   width: 100%;
   height: 56px;
   z-index: 1000;
-  border-bottom: 1px solid var(--mantine-color-zinc-3);
+  border-bottom: 1px solid var(--mantine-color-zinc-7);
+
+  /* From https://css.glass */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .inner {

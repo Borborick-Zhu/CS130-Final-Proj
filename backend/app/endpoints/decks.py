@@ -97,6 +97,7 @@ def get_user_decks(user_id: str = Depends(get_current_user)):
     """
     Get all decks belonging to the current user.
     """
+    print('getting decks')
     response = (
         supabase
         .table("flashcard_decks")
@@ -164,6 +165,7 @@ def get_deck_flashcards(deck_id: str, user_id: str = Depends(get_current_user)):
     """
     Get all flashcards in a specific deck if the deck is owned by the current user.
     """
+    print("getting flashcards for deck", deck_id)
     deck_check = (
         supabase
         .table("flashcard_decks")
@@ -233,8 +235,11 @@ async def create_flashcards_from_file(deck_id: str, file: UploadFile = File(...)
     Create multiple flashcards for a given deck, if that deck belongs to the current user.
     """
     # Load the file
+    print("called create_flashcards_from_file")
     file_content = await file.read()
     flashcards = await process_file(file_content)
+
+    print("processed file")
 
     flashcard_entries = []
     for i, (question, answer) in enumerate(flashcards):
@@ -265,6 +270,8 @@ async def create_flashcards_from_file(deck_id: str, file: UploadFile = File(...)
 
 
     response = supabase.table("flashcards").insert(flashcard_entries).execute()
+
+    print("inserted into supabase")
 
     if not response.data:
         raise HTTPException(
