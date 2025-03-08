@@ -71,6 +71,24 @@ def test_count_tokens_basic():
     num_tokens = count_tokens(text)
     assert num_tokens > 0, "count_tokens should return a positive integer"
 
+def test_filter_markdown_chunks_basic():
+    chunks = [
+        "###",                             # only hashes - should be flagged
+        "Some valid text",                 # contains actual content - should be approved
+        "   ",                             # only whitespace - should be flagged
+        "# Header with some text"          # contains a header and content - should be approved
+    ]
+    
+    approved, flagged = filter_markdown_chunks(chunks)
+    
+    assert "Some valid text" in approved, "Expected 'Some valid text' to be approved."
+    assert "# Header with some text" in approved, "Expected '# Header with some text' to be approved."
+    assert "###" in flagged, "Expected '###' to be flagged."
+    assert "   " in flagged, "Expected whitespace-only chunk to be flagged."
+    
+    for chunk in approved:
+        assert chunk not in flagged, "Chunk should not appear in both approved and flagged lists."
+
 
 #async tests that call the api
 
@@ -121,17 +139,30 @@ async def test_process_file_real_call():
     print("FILE QA PAIRS:", qa_pairs)
     assert len(qa_pairs) > 0, "We expect at least one Q/A pair from the processed file."
 
+async def test_chunk_text_real_call():
+    openai_client = get_openai_async_client()
+    block_text = (
+        "Python is an interpreted language. FastAPI is a modern web framework in Python."
+    )
+
+    index = 0
+    idx, chunks = await chunk_text(openai_client, block_text, index)
+    print("Test chunk text output:", chunks)
+
+    assert idx == index, "Returned index should match the provided index."
+    assert isinstance(chunks, list) and len(chunks) > 0, "Chunks should be a non-empty list."
+
 #main func
 async def main():
     # Synchronous tests
     run_test(test_chunking_instructions_basic)
     run_test(test_create_flashcard_instructions_basic)
     run_test(test_count_tokens_basic)
-    #run_test(test_filter_markdown_chunks_basic)
+    run_test(test_filter_markdown_chunks_basic)
 
     # Asynchronous (real GPT) tests
     await run_async_test(test_create_flashcard_real_call)
-    #await run_async_test(test_chunk_text_real_call)
+    await run_async_test(test_chunk_text_real_call)
     await run_async_test(test_process_blocks_real_call)
     await run_async_test(test_process_chunks_real_call)
     await run_async_test(test_process_file_real_call)
