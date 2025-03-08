@@ -28,7 +28,7 @@ export const Hero = () => {
               </Text>
 
               <Group mt="xl">
-                <Button size="lg" leftSection={<RocketIcon />} component="a" href="/dashboard">
+                <Button size="lg" leftSection={<RocketIcon />} component="a" href="/signup">
                   Get Started
                 </Button>
               </Group>

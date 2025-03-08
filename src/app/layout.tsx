@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { theme } from "../theme";
 import { Notifications } from '@mantine/notifications';
-
+import { DeckProvider } from './context/DeckContext';
 import { shadcnCssVariableResolver } from './theme/cssVariableResolver';
 import { shadcnTheme } from './theme/theme';
 
@@ -32,14 +32,16 @@ export default function RootLayout({ children }: { children: any }) {
         />
       </head>
       <body>
-      <MantineProvider
-        // dark mode:
-        theme={shadcnTheme} 
-        defaultColorScheme="dark"
-        cssVariablesResolver={shadcnCssVariableResolver}>
-        <Notifications />
+      <DeckProvider>
+        <MantineProvider
+          // dark mode:
+          theme={shadcnTheme} 
+          defaultColorScheme="dark"
+          cssVariablesResolver={shadcnCssVariableResolver}>
+          <Notifications />
             {children}
-      </MantineProvider>
+        </MantineProvider>
+      </DeckProvider>
       </body>
     </html>
   );

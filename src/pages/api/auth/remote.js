@@ -9,8 +9,10 @@ export async function signUp(email, password) {
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
       console.error('Sign-up error:', error.message);
+      return { success: false, error: error.message };
     } else {
       console.log('User signed up:', data);
+      return { success: true, data: data };
     }
 }
   
@@ -19,8 +21,10 @@ export async function signIn(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
         console.error('Sign-in error:', error.message);
+        return { success: false, error: error.message };
     } else {
         console.log('User signed in:', data);
+        return { success: true, data: data };
     }
 }
   
@@ -31,6 +35,7 @@ export async function signOut() {
         console.error('Sign-out error:', error.message);
     } else {
         console.log('User signed out successfully');
+        return { success: true };
     }
 }
   
