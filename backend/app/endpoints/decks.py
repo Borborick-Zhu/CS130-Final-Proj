@@ -112,24 +112,33 @@ def get_user_decks(user_id: str = Depends(get_current_user)):
 @router.delete("/api/decks/{deck_id}")
 def delete_deck(deck_id: str, user_id: str = Depends(get_current_user)):
     """
-    Delete a deck if it belongs to the current user.
+    Delete a deck and its associated flashcards if it belongs to the current user.
     """
-    response = (
+    deck_response = (
         supabase
         .table("flashcard_decks")
-        .delete()
+        .select("id")
         .match({"id": deck_id, "user_id": user_id})
         .execute()
     )
 
-    if not response.data:
+    if not deck_response.data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Deck not found or not owned by user."
         )
 
-    return {"detail": "Deck deleted successfully."}
+    try:
+        supabase.table("flashcards").delete().match({"deck_id": deck_id}).execute()
+        
+        supabase.table("flashcard_decks").delete().match({"id": deck_id}).execute()
 
+        return {"detail": "Deck and associated flashcards deleted successfully."}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error deleting deck: {str(e)}"
+        )
 
 # UPDATE a deck
 # PATCH /api/decks/:deck_id
