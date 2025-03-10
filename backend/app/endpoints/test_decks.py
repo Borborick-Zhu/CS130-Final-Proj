@@ -161,6 +161,80 @@ def test_delete_deck_failure():
     except HTTPException as e:
         assert e.status_code == status.HTTP_404_NOT_FOUND
 
+def test_update_deck_success():
+    updated_deck = {
+        "id": "deck1",
+        "user_id": "e13a4297-16ae-4342-8fbf-f45587048596",
+        "name": "Updated Deck",
+        "category": "Test",
+        "description": "Updated description",
+        "created_at": "2025-03-09T00:00:00",
+        "updated_at": "2025-03-09T00:00:00"
+    }
+    fake_response = {"data": [updated_deck]}
+    import decks
+    decks.supabase = FakeSupabase({"flashcard_decks": fake_response})
+    
+    deck_update = DeckUpdate(name="Updated Deck", description="Updated description")
+    result = update_deck("deck1", deck_update, user_id="e13a4297-16ae-4342-8fbf-f45587048596")
+    assert result["name"] == "Updated Deck", "Deck name should be updated"
+
+def test_get_deck_flashcards_success():
+    fake_deck_response = {"data": [{"id": "deck1"}]}
+    fake_flashcards = [{
+        "id": "fc1",
+        "deck_id": "deck1",
+        "question": "Q1",
+        "answer": "A1",
+        "created_at": "2025-03-09T00:00:00",
+        "updated_at": "2025-03-09T00:00:00"
+    }]
+    responses = {
+        "flashcard_decks": fake_deck_response,
+        "flashcards": {"data": fake_flashcards}
+    }
+    import decks
+    decks.supabase = FakeSupabase(responses)
+    
+    result = get_deck_flashcards("deck1", user_id="e13a4297-16ae-4342-8fbf-f45587048596")
+    assert isinstance(result, list) and len(result) == 1, "Should return one flashcard"
+
+def test_create_flashcards_success():
+    # simulate deck existence and successful flashcard insertion.
+    fake_deck_response = {"data": [{"id": "deck1"}]}
+    fake_flashcards_response = {"data": [
+        {
+            "id": "fc1",
+            "deck_id": "deck1",
+            "question": "Q1",
+            "answer": "A1",
+            "created_at": "2025-03-09T00:00:00",
+            "updated_at": "2025-03-09T00:00:00"
+        },
+        {
+            "id": "fc2",
+            "deck_id": "deck1",
+            "question": "Q2",
+            "answer": "A2",
+            "created_at": "2025-03-09T00:00:00",
+            "updated_at": "2025-03-09T00:00:00"
+        }
+    ]}
+    responses = {
+        "flashcard_decks": fake_deck_response,
+        "flashcards": fake_flashcards_response
+    }
+    import decks
+    decks.supabase = FakeSupabase(responses)
+    
+    flashcards = [
+        FlashcardCreate(question="Q1", answer="A1"),
+        FlashcardCreate(question="Q2", answer="A2")
+    ]
+    result = create_flashcards("deck1", flashcards, user_id="e13a4297-16ae-4342-8fbf-f45587048596")
+    assert isinstance(result, list) and len(result) == 2, "Expected two flashcards created"
+
+
 #Main function
 async def main():
     run_test(test_create_deck_success)
@@ -168,6 +242,9 @@ async def main():
     run_test(test_get_user_decks_success)
     run_test(test_delete_deck_success)
     run_test(test_delete_deck_failure)
+    run_test(test_update_deck_success)
+    run_test(test_get_deck_flashcards_success)
+    run_test(test_create_flashcards_success)
 
 
 if __name__ == "__main__":
